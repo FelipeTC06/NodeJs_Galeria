@@ -3,6 +3,11 @@ class Photo {
         console.log('test');
         res.send('All photos');
     }
+
+    sendPhoto(req,res) {
+        res.json({ message: 'Imagem salva com sucesso!' });
+    }
+
 }
 
 const photoController = new Photo();
