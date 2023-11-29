@@ -1,14 +1,9 @@
 const express = require('express');
 const photosRouter = express.Router();
 const photoController = require('./../controllers/photoController');
-const saveDisk = require('./../middleware/saveDisk-middleware');
-const compressPhoto = require('./../middleware/compress-middleware');
+const uploadMemory = require('./../middleware/saveMemory-middleware');
 
-photosRouter.post('/upload',
-    saveDisk,
-    compressPhoto,
-    photoController.sendPhoto
-);
+photosRouter.post('/upload', uploadMemory.uploadMemory.single('file'), photoController.sendPhoto);
 
 photosRouter.get('/', photoController.getPhoto);
 
