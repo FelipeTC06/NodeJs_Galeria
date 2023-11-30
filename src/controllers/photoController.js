@@ -1,4 +1,3 @@
-const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
@@ -10,23 +9,17 @@ class Photo {
     }
 
     sendPhoto(req,res) {
-        const base64Image = req.file.buffer.toString('base64');
-
-        sharp(Buffer.from(base64Image, 'base64'))
+        sharp(req.file.buffer)
+          .resize({ width: 100, height: 100 })
           .toBuffer()
           .then((compressedBuffer) => {
-            const base64CompressedImage = compressedBuffer.toString('base64');
-      
-            // Salvar a imagem comprimida no disco
+            const base64CompressedImage = compressedBuffer.toString('base64');      
             const outputPath = `D:/0 - Projects/Back-End/galeria/photos-galery/${req.file.originalname}`;
-
-            // Criar o diretório se não existir
             const outputDirectory = path.dirname(outputPath);
+
             if (!fs.existsSync(outputDirectory)) {
               fs.mkdirSync(outputDirectory, { recursive: true });
             }
-            
-            // Salvar a imagem comprimida no disco
             fs.writeFileSync(outputPath, base64CompressedImage);
             
             res.status(200).send(`Imagem enviada, processada e salva com sucesso em: ${outputPath}`);
