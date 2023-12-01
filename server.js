@@ -9,6 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/user', usersAuthRouter);
 app.use('/api/photo', photosRouter);
+app.use(express.static(__dirname + '/photos-galery'));
 
 app.listen(port, () => {
     console.log(`Servidor iniciado na porta ${port}`);
