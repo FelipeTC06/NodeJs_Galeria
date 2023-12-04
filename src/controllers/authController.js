@@ -1,28 +1,31 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const connection = require('../database/database');
+const pool = require('../database/database');
 require('dotenv').config();
+
 
 
 async function authUser(req, res) {
     const { email, password } = req.body;
-    const sql = 'SELECT * FROM users WHERE email = ?'
-    const user = await queryPromise(sql, email);
+    const sql = 'SELECT * FROM users WHERE email = $1';
+    const result = await queryPromise(sql, [email]);
+    const user = result.rows[0];
 
-    if (!user[0]) {
-        return res.status(401).json({ message: 'Email ou senha invaliod!' });
+    if (!user) {
+        return res.status(401).json({ message: 'Email ou senha inválido!' });
     }
-    const isPasswordValid = await bcrypt.compare(password, user[0].password);
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Email ou senha invaliod!' });
+        return res.status(401).json({ message: 'Email ou senha inválido!' });
     }
 
-    const token = jwt.sign({ userId: user[0].id, email: user[0].email }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_TIME,
     });
 
-    const { password: _, ...userLogin } = user[0];
+    const { password: _, ...userLogin } = user;
 
     res.json({
         user: userLogin,
@@ -33,7 +36,7 @@ async function authUser(req, res) {
 
 function queryPromise(sql, values) {
     return new Promise((resolve, reject) => {
-        connection.query(sql, values, (error, results, fields) => {
+        pool.query(sql, values, (error, results, fields) => {
             if (error) {
                 reject(error);
             } else {

@@ -1,4 +1,4 @@
-const connection = require('../database/database');
+const pool = require('../database/database');
 const bcrypt = require('bcrypt');
 
 async function createUser(req, res) {
@@ -10,7 +10,7 @@ async function createUser(req, res) {
 
     const hashPassword = await bcrypt.hash(password, 10);
 
-    const sql = 'INSERT INTO users (username, email, age, password) VALUES (?, ?, ?, ?)';
+    const sql = 'INSERT INTO users (username, email, age, password) VALUES ($1, $2, $3, $4)';
 
     const newUser = {
         name: username,
@@ -27,9 +27,10 @@ async function createUser(req, res) {
     }
 }
 
+
 function queryPromise(sql, values) {
     return new Promise((resolve, reject) => {
-        connection.query(sql, values, (error, results, fields) => {
+        pool.query(sql, values, (error, results, fields) => {
             if (error) {
                 reject(error);
             } else {
