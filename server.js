@@ -12,5 +12,5 @@ app.use('/api/photo', photosRouter);
 app.use(express.static(__dirname + '/photos-galery'));
 
 app.listen(port, () => {
-    console.log(`Servidor iniciado na porta ${port}`);
+    console.log(`Server started on port ${port}`);
 });

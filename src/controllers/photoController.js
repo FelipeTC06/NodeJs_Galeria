@@ -22,12 +22,12 @@ class Photo {
             }
             fs.writeFileSync(outputPath, base64CompressedImage);
             
-            res.status(200).send(`Imagem enviada, processada e salva com sucesso em: ${outputPath}`);
+            res.status(200).send(`Image sent, processed and saved successfully in: ${outputPath}`);
             
           })
           .catch((error) => {
             console.error(error);
-            res.status(500).send('Erro ao processar a imagem.');
+            res.status(500).send('Error processing the image.');
           });
     }
 

@@ -12,13 +12,13 @@ async function authUser(req, res) {
     const user = result.rows[0];
 
     if (!user) {
-        return res.status(401).json({ message: 'Email ou senha inválido!' });
+        return res.status(401).json({ message: 'Invalid email or password!' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Email ou senha inválido!' });
+        return res.status(401).json({ message: 'Invalid email or password!' });
     }
 
     const token = jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, {
@@ -30,7 +30,7 @@ async function authUser(req, res) {
     res.json({
         user: userLogin,
         token: token,
-        menssage: 'Usuário logado com sucesso!'
+        menssage: 'User logged in successfully!'
     });
 }
 

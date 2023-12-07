@@ -13,9 +13,9 @@ const pool = new Pool({
 
 pool.connect((err) => {
   if (err) {
-    console.error('Erro ao conectar ao banco de dados:', err);
+    console.error('Error connecting to database:', err);
   } else {
-    console.log('Conectado ao banco de dados PostgreSQL');
+    console.log('Connected to PostgreSQL database');
   }
 });
 
