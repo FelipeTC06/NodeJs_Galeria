@@ -26,6 +26,29 @@ async function createUser(req, res) {
         res.status(500).json({ error: 'Internal error creating user' });
     }
 }
+async function deleteUser(req, res) {
+    const userId = req.body.id;
+    console.log(userId)
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        await client.query('DELETE FROM photos WHERE userId = $1', [userId]);
+
+        await client.query('DELETE FROM users WHERE id = $1', [userId]);
+
+        await client.query('COMMIT');
+
+        res.status(200).json({ message: 'User and their photos deleted successfully.' });
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error(error);
+        res.status(500).json({ error: 'Error deleting user and photos.' });
+    } finally {
+        client.release();
+    }
+}
 
 
 function queryPromise(sql, values) {
@@ -40,4 +63,4 @@ function queryPromise(sql, values) {
     });
 }
 
-module.exports = createUser;
+module.exports = { createUser, deleteUser };
