@@ -28,7 +28,6 @@ async function createUser(req, res) {
 }
 async function deleteUser(req, res) {
     const userId = req.body.id;
-    console.log(userId)
     const client = await pool.connect();
 
     try {
